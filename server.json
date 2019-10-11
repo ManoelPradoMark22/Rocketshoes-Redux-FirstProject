@@ -29,38 +29,38 @@
     {
       "id": 1,
       "title": "Tênis de Caminhada Leve Confortável",
-      "price": 179.9,
+      "price": 179.99,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg"
     },
     {
       "id": 2,
       "title": "Tênis VR Caminhada Confortável Detalhes Couro Masculino",
-      "price": 139.9,
+      "price": 139.99,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg"
     },
     {
       "id": 3,
       "title": "Tênis Adidas Duramo Lite 2.0",
-      "price": 219.9,
+      "price": 219.99,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg"
     },
     {
       "id": 5,
-      "title": "Tênis VR Caminhada Confortável Detalhes Couro Masculino",
-      "price": 139.9,
-      "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg"
+      "title": "Tênis Nike Revolution 5",
+      "price": 279.99,
+      "image": "https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/36/HZM-1731-036/HZM-1731-036_zoom1.jpg"
     },
     {
       "id": 6,
-      "title": "Tênis Adidas Duramo Lite 2.0",
-      "price": 219.9,
-      "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg"
+      "title": "Tênis Nike Downshifter 9",
+      "price": 159.99,
+      "image": "https://static.netshoes.com.br/produtos/tenis-nike-downshifter-9-masculino/02/HZM-1276-002/HZM-1276-002_zoom1.jpg"
     },
     {
       "id": 4,
-      "title": "Tênis de Caminhada Leve Confortável",
-      "price": 179.9,
-      "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg"
+      "title": "Tênis Adidas Run Falcon",
+      "price": 169.99,
+      "image": "https://static.netshoes.com.br/produtos/tenis-adidas-run-falcon-masculino/14/COL-6981-014/COL-6981-014_zoom1.jpg"
     }
   ]
 }
