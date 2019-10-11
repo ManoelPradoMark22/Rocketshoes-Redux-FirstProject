@@ -17,7 +17,7 @@ export const Cart = styled(Link)`
   transition: opacity 0.2s;
 
   &:hover {
-    opacity: 0.7;
+    opacity: 0.8;
 
     strong {
       color: #7159c1;
