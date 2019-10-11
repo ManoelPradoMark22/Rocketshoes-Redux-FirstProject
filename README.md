@@ -5,4 +5,4 @@
 <li>Em um terminal execute "json-server server.json -p 3333" ou "json-server server.json -p 3333 -w" . O comando -w ao fim possibilita a reinicialização automática do servidor ao alterar algo no server.json;</li>
 <li>Em outro terminal, execute "yarn start"</li>
 </ul>
-***Ignore as aspas***
+P.S.: Ignore as aspas
