@@ -16,6 +16,17 @@ export default function cart(state = [], action) {
           });
         }
       });
+    case 'REMOVE_FROM_CART':
+      return produce(state, draft => {
+        /* neste caso, como o id já esta vindo direto da action, nao precisa
+        usar o action.product.id como no ADD_TO_CART, use action.id diretamente */
+        const productIndex = draft.findIndex(p => p.id === action.id);
+
+        if (productIndex >= 0) {
+          draft.splice(productIndex, 1);
+        }
+      });
+
     default:
       return state;
   }
