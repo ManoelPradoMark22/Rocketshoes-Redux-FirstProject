@@ -7,11 +7,15 @@ import {
   MdDelete,
 } from 'react-icons/md';
 
+import { formatPrice } from '../../util/format';
+
 import * as CartActions from '../../store/modules/cart/actions';
 
 import { Container, ProductTable, Total } from './styles';
 
-function Cart({ cart, removeFromCart, updateAmount }) {
+/* Todas props que estão no mapStateToProps temos acesso aqui, basta passa-las
+como parâmetro */
+function Cart({ cart, total, removeFromCart, updateAmount }) {
   /* Aqui nao precisa fazer nenhuma verificacao, é o redux que vai lhedar com
   qualquer tipo de validacao la no reducer */
   function increment(product) {
@@ -59,7 +63,7 @@ function Cart({ cart, removeFromCart, updateAmount }) {
                 </div>
               </td>
               <td>
-                <strong>R$839,97</strong>
+                <strong>{product.subtotal}</strong>
               </td>
               <td>
                 <button
@@ -81,15 +85,27 @@ function Cart({ cart, removeFromCart, updateAmount }) {
 
         <Total>
           <span>TOTAL</span>
-          <strong>R$1179,95</strong>
+          <strong>{total}</strong>
         </Total>
       </footer>
     </Container>
   );
 }
 
+/* É bom colocarmos os calculos fora do Render! por exemplo, aqui nessa funcao
+os calculos so serão executados qnd houver alteracoes no state!
+Já no render seria executado sempre q renderizado a página */
 const mapStateToProps = state => ({
-  cart: state.cart,
+  cart: state.cart.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.price * product.amount),
+  })),
+  /* usamos reduce() qnd quisermos pegar um array e reduzi-lo em um unico valor */
+  total: formatPrice(
+    state.cart.reduce((total, product) => {
+      return total + product.price * product.amount;
+    }, 0)
+  ), // inicia no valor 0
 });
 
 const mapDispatchToProps = dispatch =>
