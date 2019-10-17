@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import api from '../../../services/api';
 import { fomatPrice, formatPrice } from '../../../util/format';
 
-import { addToCartSuccess, updateAmount } from './actions';
+import { addToCartSuccess, updateAmountSuccess } from './actions';
 
 /* o * é um generator. É um similar do async! Mas o generator
 tem mais funcionalidades que o async ! por isso vamos utilizá-lo. Mais adiante,
@@ -38,7 +38,10 @@ function* addToCart({ id }) {
   }
   if (productExists) {
     // se cair aqui, altera somente o amount
-    yield put(updateAmount(id, amount));
+    yield put(
+      updateAmountSuccess(id, amount)
+    ); /* aqui ja podemos dar o Sucess diretamente ao invés do Request
+    pq já fizemos a verificacao de stock acima */
   } else {
     // caso contrário, adiciona no carrinho
     /* yield é o similar do await
@@ -58,6 +61,20 @@ function* addToCart({ id }) {
   }
 }
 
+function* updateAmount({ id, amount }) {
+  if (amount <= 0) return;
+
+  const stock = yield call(api.get, `stock/${id}`);
+  const stockAmount = stock.data.amount;
+
+  if (amount > stockAmount) {
+    toast.error('Quantidade solicitada fora do estoque!');
+    return;
+  }
+
+  yield put(updateAmountSuccess(id, amount));
+}
+
 /* all é para cadastrar vários listeners
 e como escutar a action? podemos usar alguns métodos como o takeLatest ou
 takeEvery (vamos usar o takeLatest, pq ele vai pegar apenas a última action).
@@ -65,4 +82,7 @@ ex: takeLatest: se o usuario clicar duas vezes rapidamente, o saga discarta a
 primeira chamada caso ela nao tenha terminado e executa apenas a ultima.
 já o takeEvery vai fazer todas as chamadas, se clicar duas vezes no botao
 rapidamente, vai adicionar 3 vezes no carrinho */
-export default all([takeLatest('@cart/ADD_REQUEST', addToCart)]);
+export default all([
+  takeLatest('@cart/ADD_REQUEST', addToCart),
+  takeLatest('@cart/UPDATE_AMOUNT_REQUEST', updateAmount),
+]);

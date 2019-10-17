@@ -15,15 +15,15 @@ import { Container, ProductTable, Total } from './styles';
 
 /* Todas props que estão no mapStateToProps temos acesso aqui, basta passa-las
 como parâmetro */
-function Cart({ cart, total, removeFromCart, updateAmount }) {
+function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
   /* Aqui nao precisa fazer nenhuma verificacao, é o redux que vai lhedar com
   qualquer tipo de validacao la no reducer */
   function increment(product) {
-    updateAmount(product.id, product.amount + 1);
+    updateAmountRequest(product.id, product.amount + 1);
   }
 
   function decrement(product) {
-    updateAmount(product.id, product.amount - 1);
+    updateAmountRequest(product.id, product.amount - 1);
   }
 
   return (
