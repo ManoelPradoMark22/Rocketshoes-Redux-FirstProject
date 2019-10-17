@@ -8,6 +8,7 @@ import {
 import { toast } from 'react-toastify';
 
 import api from '../../../services/api';
+import history from '../../../services/history';
 import { fomatPrice, formatPrice } from '../../../util/format';
 
 import { addToCartSuccess, updateAmountSuccess } from './actions';
@@ -58,6 +59,9 @@ function* addToCart({ id }) {
     };
 
     yield put(addToCartSuccess(data));
+
+    /* assim é a forma correta de se fazer! */
+    history.push('/cart');
   }
 }
 

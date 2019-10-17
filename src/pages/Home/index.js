@@ -31,6 +31,18 @@ class Home extends Component {
     const { addToCartRequest } = this.props;
 
     addToCartRequest(id);
+
+    /* this.props.history.push('/cart')
+    Se fizermos desta forma tradicional pode ocorrer a navegacao para o
+    carrinho sem que a requisicao API  addToCartRequest(id) feita acima finalize!
+    NESSE CASO colocar um await antes do addCartRequest(id) NÃO FUNCIONARIA !
+    Então nesses casos nos quais precisamos fazer a parte de navegacao do usuario
+    depois de uma funcao do saga finalizar, precisaremos fazer a navegacao por
+    dentro do SAGA e nao aqui!
+    o jeito certo: Criamos um arquivo history.js em src/services e usamos em
+    App.js e em sagas.js (na parte de adicionar o produto ao carrinho).
+    Ai ele vai fazer o redirecionamento apenas DEPOIS de finalizar a chamada API!
+    */
   };
 
   render() {
