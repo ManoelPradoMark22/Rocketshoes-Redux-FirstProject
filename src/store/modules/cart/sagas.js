@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import api from '../../../services/api';
 import history from '../../../services/history';
-import { fomatPrice, formatPrice } from '../../../util/format';
+import { formatPrice } from '../../../util/format';
 
 import { addToCartSuccess, updateAmountSuccess } from './actions';
 

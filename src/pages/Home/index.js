@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MdAddShoppingCart } from 'react-icons/md';
@@ -11,25 +11,34 @@ import * as CartActions from '../../store/modules/cart/actions';
 
 import { ProductList } from './styles';
 
-class Home extends Component {
-  state = {
-    products: [],
-  };
+function Home({ amount, addToCartRequest }) {
+  const [products, setProducts] = useState([]);
 
-  async componentDidMount() {
-    const response = await api.get('products');
+  // simula o componentDidMount()
+  useEffect(() => {
+    async function loadProducts() {
+      const response = await api.get('products');
 
-    const data = response.data.map(product => ({
-      ...product,
-      priceFormatted: formatPrice(product.price),
-    }));
+      const data = response.data.map(product => ({
+        ...product,
+        priceFormatted: formatPrice(product.price),
+      }));
 
-    this.setState({ products: data });
-  }
+      setProducts(data); // no lugar do setState()
+    }
 
-  handleAddProduct = id => {
-    const { addToCartRequest } = this.props;
+    loadProducts();
+  }, []); /* como queremos simular o componentDidMount() e executar apenas uma vez
+  qnd o componente for montado, como o segundo param temos q passar um array vazio
+  de dependencias */
 
+  // deve ser definida nesse formato agora, nao em arrowFunction
+  /* nao precisamos usar o hook useCallback() por volta dessa função, pq essa fç
+  nao tem nenhuma dependencia, nao tem nenhuma informacao contida nas variaveis
+  do componente, depende apenas do proprio parametro q ela recebe (id).
+  Nesse ate depende de um valor do componente, o  addToCartRequest(), mas é
+  um valor que nunca vai mudar, ou seja, a fç nao vai ser recriada */
+  function handleAddProduct(id) {
     addToCartRequest(id);
 
     /* this.props.history.push('/cart')
@@ -43,40 +52,33 @@ class Home extends Component {
     App.js e em sagas.js (na parte de adicionar o produto ao carrinho).
     Ai ele vai fazer o redirecionamento apenas DEPOIS de finalizar a chamada API!
     */
-  };
+  }
 
-  render() {
-    const { products } = this.state;
-    const { amount } = this.props;
-
-    return (
-      <ProductList>
-        {products.map(product => (
-          <li key={product.id}>
-            <img src={product.image} alt={product.title} />
-            <strong>{product.title}</strong>
-            {/* <span>{formatPrice(product.price)}</span>
+  return (
+    <ProductList>
+      {products.map(product => (
+        <li key={product.id}>
+          <img src={product.image} alt={product.title} />
+          <strong>{product.title}</strong>
+          {/* <span>{formatPrice(product.price)}</span>
           poderiamos usar diretamente assim, mas acontece que sempre que
           carregase a aplicacao (qnd o render() fosse chamado) iria executar
           essa funçao junto consigo para todos os preços, entao é melhor usá-la
           qnd carregarmos as infos da api (componentDidMount()) */}
-            <span>{product.priceFormatted}</span>
+          <span>{product.priceFormatted}</span>
 
-            <button
-              type="button"
-              onClick={() => this.handleAddProduct(product.id)}
-            >
-              <div>
-                <MdAddShoppingCart size={16} color="#fff" />{' '}
-                {amount[product.id] || 0}
-              </div>
-              <span>ADICIONAR AO CARRINHO</span>
-            </button>
-          </li>
-        ))}
-      </ProductList>
-    );
-  }
+          {/* nao é mais classe entao nao precisa de usar o this mais */}
+          <button type="button" onClick={() => handleAddProduct(product.id)}>
+            <div>
+              <MdAddShoppingCart size={16} color="#fff" />{' '}
+              {amount[product.id] || 0}
+            </div>
+            <span>ADICIONAR AO CARRINHO</span>
+          </button>
+        </li>
+      ))}
+    </ProductList>
+  );
 }
 
 const mapStateToProps = state => ({
