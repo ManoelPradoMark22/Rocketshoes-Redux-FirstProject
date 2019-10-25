@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   MdRemoveCircleOutline,
   MdAddCircleOutline,
@@ -15,15 +14,35 @@ import { Container, ProductTable, Total } from './styles';
 
 /* Todas props que estão no mapStateToProps temos acesso aqui, basta passa-las
 como parâmetro */
-function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+export default function Cart() {
+  const total = useSelector(state =>
+    formatPrice(
+      /* usamos reduce() qnd quisermos pegar um array e reduzi-lo em um unico valor */
+      state.cart.reduce((totalSum, product) => {
+        return totalSum + product.price * product.amount;
+      }, 0) /* inicia com o valor zero */
+    )
+  );
+
+  const cart = useSelector(state =>
+    state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.price * product.amount),
+    }))
+  );
+
+  const dispatch = useDispatch();
   /* Aqui nao precisa fazer nenhuma verificacao, é o redux que vai lhedar com
   qualquer tipo de validacao la no reducer */
+  /* É bom colocarmos os calculos fora do Render! por exemplo, aqui nessa funcao
+  os calculos so serão executados qnd houver alteracoes no state!
+  Já no render seria executado sempre q renderizado a página */
   function increment(product) {
-    updateAmountRequest(product.id, product.amount + 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
   }
 
   function decrement(product) {
-    updateAmountRequest(product.id, product.amount - 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
   }
 
   return (
@@ -68,7 +87,9 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
               <td>
                 <button
                   type="button"
-                  onClick={() => removeFromCart(product.id)}
+                  onClick={() =>
+                    dispatch(CartActions.removeFromCart(product.id))
+                  }
                 >
                   {/* crie uma nova arrayFunction no onClick, para ele
                   nao disparar automaticamente sempre q clicar */}
@@ -91,27 +112,3 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
     </Container>
   );
 }
-
-/* É bom colocarmos os calculos fora do Render! por exemplo, aqui nessa funcao
-os calculos so serão executados qnd houver alteracoes no state!
-Já no render seria executado sempre q renderizado a página */
-const mapStateToProps = state => ({
-  cart: state.cart.map(product => ({
-    ...product,
-    subtotal: formatPrice(product.price * product.amount),
-  })),
-  /* usamos reduce() qnd quisermos pegar um array e reduzi-lo em um unico valor */
-  total: formatPrice(
-    state.cart.reduce((total, product) => {
-      return total + product.price * product.amount;
-    }, 0)
-  ), // inicia no valor 0
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(CartActions, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Cart);

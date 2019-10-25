@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { formatPrice } from '../../util/format';
 import api from '../../services/api';
@@ -11,8 +10,27 @@ import * as CartActions from '../../store/modules/cart/actions';
 
 import { ProductList } from './styles';
 
-function Home({ amount, addToCartRequest }) {
+export default function Home() {
   const [products, setProducts] = useState([]);
+
+  const amount = useSelector(state =>
+    state.cart.reduce((sumAmount, product) => {
+      /* estamos criando um objeto amount com a key product.id e com o valor
+    product.amount */
+      sumAmount[product.id] = product.amount;
+      return sumAmount;
+    }, {})
+  );
+
+  /* converte actions do redux em propriedades do nosso componente
+    assim  */
+  /* Ao conectarmos o componente com o redux atravez do connect, temos acesso
+    a uma propriedade chamada dispatch atraves do this.props. Ao fazer o
+    dispatch, todos os reducers sao ativados, já que eles escutam todas as actions,
+    por isso que dentro de cada reducer deve ter um switch para fazer esse tratamento
+    para q cada reducer possa executar apenas algumas actions especificas */
+  /* o dispatch dispara as actions do redux */
+  const dispatch = useDispatch();
 
   // simula o componentDidMount()
   useEffect(() => {
@@ -39,7 +57,7 @@ function Home({ amount, addToCartRequest }) {
   Nesse ate depende de um valor do componente, o  addToCartRequest(), mas é
   um valor que nunca vai mudar, ou seja, a fç nao vai ser recriada */
   function handleAddProduct(id) {
-    addToCartRequest(id);
+    dispatch(CartActions.addToCartRequest(id));
 
     /* this.props.history.push('/cart')
     Se fizermos desta forma tradicional pode ocorrer a navegacao para o
@@ -80,28 +98,3 @@ function Home({ amount, addToCartRequest }) {
     </ProductList>
   );
 }
-
-const mapStateToProps = state => ({
-  amount: state.cart.reduce((amount, product) => {
-    /* estamos criando um objeto amount com a key product.id e com o valor
-    product.amount */
-    amount[product.id] = product.amount;
-    return amount;
-  }, {}),
-});
-
-/* converte actions do redux em propriedades do nosso componente
-assim  */
-/* Ao conectarmos o componente com o redux atravez do connect, temos acesso
-    a uma propriedade chamada dispatch atraves do this.props. Ao fazer o
-    dispatch, todos os reducers sao ativados, já que eles escutam todas as actions,
-    por isso que dentro de cada reducer deve ter um switch para fazer esse tratamento
-    para q cada reducer possa executar apenas algumas actions especificas */
-/* o dispatch dispara as actions do redux */
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(CartActions, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
